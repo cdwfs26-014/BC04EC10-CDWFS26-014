@@ -1,0 +1,68 @@
+{
+  "info": {
+    "name": "my_distance API",
+    "description": "Collection de validation de l'API my_distance (calcul de distance 2D).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:5000" }
+  ],
+  "item": [
+    {
+      "name": "API root",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api" },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 200', () => pm.response.to.have.status(200));",
+              "pm.test('objet vide', () => pm.expect(pm.response.json()).to.eql({}));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Calculate distance (3-4-5)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/api/distance",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start_point\": \"0,0\",\n  \"end_point\": \"3,4\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 200', () => pm.response.to.have.status(200));",
+              "pm.test('distance = 5', () => pm.expect(pm.response.json().result_distance).to.eql(5.0));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List distances",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/distances" },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 200', () => pm.response.to.have.status(200));",
+              "pm.test('renvoie un tableau', () => pm.expect(pm.response.json()).to.be.an('array'));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
