@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: my_distance API
+  description: >
+    API de calcul de distance euclidienne (theoreme de Pythagore) entre deux
+    points d'un plan a 2 dimensions. Cette specification documente l'API
+    telle qu'elle existe actuellement (developpeur principal).
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000
+    description: Serveur de developpement local
+tags:
+  - name: API
+  - name: Distances
+paths:
+  /api:
+    get:
+      tags: [API]
+      summary: Point d'entree de l'API
+      description: Renvoie actuellement un objet vide.
+      responses:
+        "200":
+          description: Objet vide
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+  /api/distance:
+    post:
+      tags: [Distances]
+      summary: Calcule la distance entre deux points
+      description: >
+        La route est declaree pour les methodes POST, GET et PUT, mais attend
+        systematiquement un corps JSON (POST est la methode pertinente).
+      operationId: calculateDistance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DistanceRequest"
+            examples:
+              exemple_du_sujet:
+                summary: A(2,5) et B(1,6)
+                value:
+                  start_point: "2,5"
+                  end_point: "1,6"
+      responses:
+        "200":
+          description: Distance calculee
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DistanceRecord"
+  /api/distances:
+    get:
+      tags: [Distances]
+      summary: Historique de tous les calculs effectues
+      operationId: listDistances
+      responses:
+        "200":
+          description: Liste des calculs (vide si aucun calcul effectue)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DistanceRecord"
+components:
+  schemas:
+    DistanceRequest:
+      type: object
+      required: [start_point, end_point]
+      properties:
+        start_point:
+          type: string
+          description: Coordonnees du point de depart au format "x,y" (entiers)
+          example: "2,5"
+        end_point:
+          type: string
+          description: Coordonnees du point d'arrivee au format "x,y" (entiers)
+          example: "1,6"
+    DistanceRecord:
+      type: object
+      properties:
+        requested_at:
+          type: string
+          format: date-time
+        result_distance:
+          type: number
+          format: double
+          example: 1.4142135623730951
+        start_point:
+          type: array
+          items:
+            type: integer
+          example: [2, 5]
+        end_point:
+          type: array
+          items:
+            type: integer
+          example: [1, 6]
