@@ -1,0 +1,11 @@
+{
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "terminal.integrated.env.linux": {
+        "LOCUST_SKIP_MONKEY_PATCH": "1"
+    }
+}
